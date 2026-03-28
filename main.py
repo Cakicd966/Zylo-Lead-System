@@ -25,6 +25,22 @@ seen_websites.add(website)
 
             if status in ["No Website", "Outdated"]:
                 contact = scrape_contact_info(website)
+                score = 0
+
+if status == "No Website":
+    score += 2
+if not contact["emails"]:
+    score += 1
+
+all_leads.append({
+    "Business Name": biz["name"],
+    "Location": location,
+    "Website": website,
+    "Status": status,
+    "Phone": ", ".join(contact["phones"]),
+    "Email": ", ".join(contact["emails"]),
+    "Score": score
+})
 
                 all_leads.append({
                     "Business Name": biz["name"],
