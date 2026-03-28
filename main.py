@@ -17,6 +17,10 @@ seen_websites = set()
 
         for biz in businesses:
             website = biz["website"]
+            if website in seen_websites:
+    continue
+
+seen_websites.add(website)
             status = check_website_status(website)
 
             if status in ["No Website", "Outdated"]:
