@@ -2,8 +2,15 @@ import pandas as pd
 from scraper import search_businesses
 from utils import check_website_status, scrape_contact_info
 
-LOCATIONS = ["London", "Manchester", "Birmingham"]
-NICHE = "plumber"
+import pandas as pd
+from scraper import search_businesses
+from utils import check_website_status, scrape_contact_info, is_valid_business_site
+
+location = input("Enter location: ")
+niche = input("Enter business type (e.g. plumber): ")
+
+LOCATIONS = [location]
+NICHE = niche
 
 def run():
     all_leads = []
