@@ -7,6 +7,7 @@ NICHE = "plumber"
 
 def run():
     all_leads = []
+seen_websites = set()
 
     for location in LOCATIONS:
         print(f"🔍 Searching in {location}...")
