@@ -11,6 +11,44 @@ seen_websites = set()
 
     for location in LOCATIONS:
         print(f"🔍 Searching in {location}...")
+        for biz in businesses:
+    website = biz["website"]
+
+    # ✅ skip empty websites
+    if not website:
+        continue
+
+    # ✅ dedupe
+    if website in seen_websites:
+        continue
+    seen_websites.add(website)
+
+    # ✅ filter junk sites
+    if not is_valid_business_site(website):
+        continue
+
+    status = check_website_status(website)
+
+    if status in ["No Website", "Outdated"]:
+        contact = scrape_contact_info(website)
+
+        # 🔥 scoring
+        score = 0
+        if status == "No Website":
+            score += 2
+        if not contact["emails"]:
+            score += 1
+
+        # ✅ THIS is the correct append
+        all_leads.append({
+            "Business Name": biz["name"],
+            "Location": location,
+            "Website": website,
+            "Status": status,
+            "Phone": ", ".join(contact["phones"]),
+            "Email": ", ".join(contact["emails"]),
+            "Score": score
+        })
 
         query = f"{NICHE} in {location}"
         businesses = search_businesses(query)
