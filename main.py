@@ -1,27 +1,39 @@
 import pandas as pd
 from scraper import search_businesses
-from utils import check_website_status
+from utils import check_website_status, scrape_contact_info
 
-def run(location, niche):
-    query = f"{niche} in {location}"
-    businesses = search_businesses(query)
+LOCATIONS = ["London", "Manchester", "Birmingham"]
+NICHE = "plumber"
 
-    leads = []
+def run():
+    all_leads = []
 
-    for biz in businesses:
-        status = check_website_status(biz["website"])
+    for location in LOCATIONS:
+        print(f"🔍 Searching in {location}...")
 
-        if status in ["No Website", "Outdated"]:
-            leads.append({
-                "Business Name": biz["name"],
-                "Website": biz["website"],
-                "Website Status": status
-            })
+        query = f"{NICHE} in {location}"
+        businesses = search_businesses(query)
 
-    df = pd.DataFrame(leads)
+        for biz in businesses:
+            website = biz["website"]
+            status = check_website_status(website)
+
+            if status in ["No Website", "Outdated"]:
+                contact = scrape_contact_info(website)
+
+                all_leads.append({
+                    "Business Name": biz["name"],
+                    "Location": location,
+                    "Website": website,
+                    "Status": status,
+                    "Phone": ", ".join(contact["phones"]),
+                    "Email": ", ".join(contact["emails"])
+                })
+
+    df = pd.DataFrame(all_leads)
     df.to_csv("leads.csv", index=False)
 
-    print("✅ Leads saved to leads.csv")
+    print("🔥 DONE — leads saved to leads.csv")
 
 if __name__ == "__main__":
-    run("London", "plumber")
+    run()
