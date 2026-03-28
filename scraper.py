@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 def search_businesses(query):
-    url = f"https://www.google.com/search?q={query.replace(' ', '+')}"
+    url = f"https://www.bing.com/search?q={query.replace(' ', '+')}"
     
     headers = {
         "User-Agent": "Mozilla/5.0"
@@ -13,9 +13,9 @@ def search_businesses(query):
 
     results = []
 
-    for g in soup.select("div.tF2Cxc"):
-        title = g.select_one("h3")
-        link = g.select_one("a")
+    for item in soup.select("li.b_algo"):
+        title = item.select_one("h2")
+        link = item.select_one("a")
 
         if title and link:
             results.append({
